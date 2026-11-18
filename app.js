@@ -9,46 +9,57 @@
 
   /* ---- split headings into masked words ---- */
   qsa('[data-words]').forEach(el => {
-    const words = el.textContent.trim().split(/\s+/);
-    el.setAttribute('aria-label', el.textContent.trim());
-    el.innerHTML = words.map((w, i) =>
-      `<span class="w" aria-hidden="true"><span class="w__i" style="--i:${i}">${w}</span></span>`
-    ).join(' ');
+    const text = el.textContent.trim();
+    const words = text.split(/\s+/);
+    const sr = document.createElement('span');
+    sr.className = 'sr-only'; sr.textContent = text;
+    el.innerHTML = '<span aria-hidden="true">' + words.map((w, i) =>
+      `<span class="w"><span class="w__i" style="--i:${i}">${w}</span></span>`
+    ).join(' ') + '</span>';
+    el.prepend(sr);
   });
 
   /* ---- stagger helpers ---- */
   qsa('.stair').forEach((el, i) => el.style.setProperty('--k', i));
-  qsa('.illo').forEach(svg => qsa('[pathLength]', svg).forEach((p, i) => {
-    p.removeAttribute('pathLength');
-    const len = Math.ceil(p.getTotalLength ? p.getTotalLength() : 600) + 2;
-    p.style.setProperty('--len', len);
-    p.style.setProperty('--d', i);
-    p.classList.add('ln');
-  }));
+  const idle = window.requestIdleCallback || (f => setTimeout(f, 200));
+  const prepIllos = () => {
+    const shapes = qsa('.illo [pathLength]');
+    const lens = shapes.map(p => Math.ceil(p.getTotalLength ? p.getTotalLength() : 600) + 2); // read all
+    shapes.forEach((p, i) => {                                                                // then write
+      p.removeAttribute('pathLength');
+      p.style.setProperty('--len', lens[i]);
+      p.style.setProperty('--d', [...p.parentNode.querySelectorAll('[pathLength], .ln')].indexOf(p));
+      p.classList.add('ln');
+    });
+  };
   qsa('.cities li').forEach((el, i) => el.style.transitionDelay = `${i * 70}ms`);
   qsa('.props__grid .prop').forEach((el, i) => el.style.transitionDelay = `${(i % 3) * 90}ms`);
 
   /* ---- hero intro ---- */
   const ready = () => requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('is-ready')));
-  if (document.fonts && document.fonts.ready) Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 900))]).then(ready);
+  const mobile = matchMedia('(max-width: 820px)').matches;
+  if (mobile) ready();
+  else if (document.fonts && document.fonts.ready) Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 900))]).then(ready);
   else ready();
 
   /* ---- reveal on view (IntersectionObserver + scroll sweep backup, so nothing is left blank) ---- */
-  const targets = qsa('[data-words], [data-rise], .stairs, .card');
+  const targets = qsa('[data-words], [data-rise], .stairs');
+  const cards = qsa('.card');
   const show = el => el.classList.add('is-in');
-  if (flat || reduce || !('IntersectionObserver' in window)) targets.forEach(show);
+  if (flat || reduce || !('IntersectionObserver' in window)) { targets.forEach(show); prepIllos(); cards.forEach(show); }
   else {
     const io = new IntersectionObserver(entries => entries.forEach(e => {
       if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
     }), { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
     targets.forEach(el => io.observe(el));
+    window.__armCards = () => { prepIllos(); cards.forEach(el => { targets.push(el); io.observe(el); }); };
     const sweep = () => {
-      const lim = innerHeight * 0.95;
-      targets.forEach(el => {
-        if (el.classList.contains('is-in')) return;
-        const r = el.getBoundingClientRect();
-        if (r.top < lim && r.bottom > 0 && r.left < innerWidth && r.right > 0) show(el);
-        else if (r.bottom < 0) show(el); // flew past it
+      const lim = innerHeight * 0.95, vw = innerWidth;
+      const pending = targets.filter(el => !el.classList.contains('is-in'));
+      const rects = pending.map(el => el.getBoundingClientRect());      // read everything first
+      pending.forEach((el, i) => {                                        // then write
+        const r = rects[i];
+        if ((r.top < lim && r.bottom > 0 && r.left < vw && r.right > 0) || r.bottom < 0) show(el);
       });
     };
     addEventListener('scroll', sweep, { passive: true });
@@ -63,6 +74,8 @@
   const scrub = () => {
     if (fixedP !== null) return setBars(parseFloat(fixedP));
     if (flat || reduce) return setBars(1);
+    if (scrollY < 1 && !scrub.seen) return setBars(0);   // nothing to measure at the very top
+    scrub.seen = true;
     const r = stairs.getBoundingClientRect();
     const start = innerHeight * 0.92, end = innerHeight * 0.18;
     setBars(clamp((start - r.top) / (start - end)));
@@ -85,7 +98,19 @@
   };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
-  scrub(); navState();
+  requestAnimationFrame(() => { scrub(); navState(); });
+
+  /* ---- hero video: desktop loads it after first paint; phones wait for the first touch or scroll ---- */
+  const video = qs('.hero__video');
+  const saveData = navigator.connection && navigator.connection.saveData;
+  const startVideo = () => {
+    if (!video || video.dataset.on || saveData || reduce || flat) return;
+    video.dataset.on = '1';
+    video.src = video.dataset.src;
+    video.play && video.play().catch(() => {});
+  };
+  if (!mobile) addEventListener('load', () => setTimeout(startVideo, 300));
+  else ['touchstart', 'scroll', 'pointerdown'].forEach(ev => addEventListener(ev, startVideo, { once: true, passive: true }));
 
   /* ---- services track: drag, arrows ---- */
   const track = qs('#track');
@@ -178,9 +203,13 @@
     }
     c.globalAlpha = 1;
   };
-  let lastW = 0;
-  const repaint = () => { if (canvas.clientWidth !== lastW) { lastW = canvas.clientWidth; paint(); } };
-  repaint();
+  let lastW = 0, painted = false;
+  const repaint = () => { if (!painted) return; if (canvas.clientWidth !== lastW) { lastW = canvas.clientWidth; paint(); } };
+  const firstPaint = () => { if (painted) return; painted = true; if (window.__armCards) window.__armCards(); repaint(); };
+  if ('IntersectionObserver' in window && !flat) {
+    const pio = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { firstPaint(); pio.disconnect(); } }, { rootMargin: '800px 0px' });
+    pio.observe(canvas);
+  } else firstPaint();
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(repaint, 200); });
-  if ('ResizeObserver' in window) new ResizeObserver(() => { if (canvas.clientHeight && canvas.height !== Math.ceil(canvas.clientHeight * .34)) { lastW = 0; repaint(); } }).observe(canvas);
+  if ('ResizeObserver' in window) new ResizeObserver(() => { if (painted && canvas.clientHeight && canvas.height !== Math.ceil(canvas.clientHeight * .34)) { lastW = 0; repaint(); } }).observe(canvas);
 })();
