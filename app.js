@@ -63,7 +63,6 @@
       });
     };
     addEventListener('scroll', sweep, { passive: true });
-    addEventListener('load', sweep);
   }
 
   /* ---- stat bars: fill one after another, tied to scroll ---- */
@@ -106,6 +105,7 @@
   const startVideo = () => {
     if (!video || video.dataset.on || saveData || reduce || flat) return;
     video.dataset.on = '1';
+    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
     video.src = video.dataset.src;
     video.play && video.play().catch(() => {});
   };

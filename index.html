@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VanTrust Real Estate</title>
 <meta name="description" content="VanTrust is a national, family-held developer of industrial, office, multifamily and mixed-use real estate.">
-<link rel="preconnect" href="https://vantrustrealestate.com">
 <link rel="preload" href="fonts/season-mix-300.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://vantrustrealestate.com/wp-content/uploads/2023/05/DJI_0838-scaled.jpg" as="image" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" imagesrcset="img/hero-828.avif 828w, img/hero-1200.avif 1200w, img/hero-1600.avif 1600w" imagesizes="100vw" fetchpriority="high">
 <link rel="icon" href="img/icon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
 <style>
+.hero__video{opacity:0;transition:opacity 1s var(--ease),transform 2.4s var(--ease)!important}.hero__video.is-playing{opacity:1}
 /* VanTrust homepage concept — Season Mix display, Season Sans text */
 @font-face{font-family:"Season Mix";src:url(fonts/season-mix-300.woff2) format("woff2");font-weight:300;font-display:swap}
 @font-face{font-family:"Season Mix";src:url(fonts/season-mix-400.woff2) format("woff2");font-weight:400;font-display:swap}
@@ -93,7 +93,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 /* HERO */
 .hero{position:relative;height:100svh;min-height:680px;overflow:hidden;background:var(--forest-deep)}
 .hero__media{position:absolute;inset:0}
-.hero__video{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(.95);transform:scale(1.08);transition:transform 2.4s var(--ease)}
+.hero__poster,.hero__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.12) brightness(.95);transform:scale(1.08);transition:transform 2.4s var(--ease)}
 /* duotone: shadows lift to deep forest, highlights cap at pale sage */
 .hero__media::before{content:"";position:absolute;inset:0;z-index:1;background:#183427;mix-blend-mode:lighten}
 .hero__tint{position:absolute;inset:0;z-index:2;background:#CFDDC6;mix-blend-mode:multiply}
@@ -242,7 +242,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .js body:not(.is-ready) .hero [data-rise]{opacity:0;transform:translateY(28px)}
 .js .folder{transform:translateY(100%)}
 .js body.is-ready .folder{transform:none}
-.js body.is-ready .hero__video{transform:scale(1)}
+.js body.is-ready .hero__video,.js body.is-ready .hero__poster{transform:scale(1)}
 
 .flat *,.flat *::before,.flat *::after{transition:none!important;animation:none!important}
 .flat [data-rise],.flat .stair{opacity:1!important;transform:none!important}
@@ -255,7 +255,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   .js .w__i,.js .folder{transform:none;transition:none}
   .js .illo .ln{stroke-dashoffset:0;transition:none}
   .js .illo__dots{opacity:1}
-  .hero__video{transform:none}
+  .hero__video,.hero__poster{transform:none}
 }
 
 /* ---------- RESPONSIVE ---------- */
@@ -324,7 +324,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 
 <header class="nav" id="nav">
   <div class="nav__bar">
-    <a class="nav__logo" href="#top" aria-label="VanTrust home"><img class="logo--light" src="img/vantrust-logo-white.png" alt="VanTrust" width="340" height="74"><img class="logo--dark" src="img/vantrust-logo.png" alt="" aria-hidden="true" width="340" height="74"></a>
+    <a class="nav__logo" href="#top" aria-label="VanTrust home"><picture><source type="image/avif" srcset="img/vantrust-logo-white.avif"><img class="logo--light" src="img/vantrust-logo-white.png" alt="VanTrust" width="340" height="74"></picture><picture><source type="image/avif" srcset="img/vantrust-logo.avif"><img class="logo--dark" src="img/vantrust-logo.png" alt="" aria-hidden="true" width="340" height="74"></picture></a>
     <nav class="nav__links" aria-label="Main">
       <a href="#properties">Properties</a>
       <a href="#services">Services</a>
@@ -341,7 +341,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   <!-- HERO -->
   <section class="hero">
     <div class="hero__media" aria-hidden="true">
-      <video class="hero__video" muted loop playsinline preload="none" poster="https://vantrustrealestate.com/wp-content/uploads/2023/05/DJI_0838-scaled.jpg" data-src="https://vantrustrealestate.com/wp-content/uploads/2025/06/Website-Video-2025-Edited.mp4"></video>
+      <picture><source type="image/avif" srcset="img/hero-828.avif 828w, img/hero-1200.avif 1200w, img/hero-1600.avif 1600w" sizes="100vw"><img class="hero__poster" src="img/hero-828.jpg" srcset="img/hero-828.jpg 828w, img/hero-1200.jpg 1200w, img/hero-1600.jpg 1600w" sizes="100vw" alt="" fetchpriority="high" decoding="async"></picture>
+      <video class="hero__video" muted loop playsinline preload="none" data-src="img/hero-loop.mp4" aria-hidden="true"></video>
       <div class="hero__tint"></div>
     </div>
 
@@ -404,14 +405,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
       <p class="lede" data-rise>Developer of the Year honours in three markets, and project awards from Las Vegas to Columbus.</p>
     </div>
     <ul class="wrap awards__grid" aria-label="Awards">
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2026/04/Awards-VTRE-Website.png" alt="NAIOP Northeast Florida, Developer of the Year 2025" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2025/09/2-1.png" alt="Columbus Business First, Developer of the Year 2025" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2025/09/1-1.png" alt="Columbus Business First, Industrial Project of the Year 2025" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2025/03/Awards-VTRE-Website.png" alt="NAIOP Southern Nevada Spotlight Awards, Industrial Park 2025" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2025/01/Awards-VTRE-Website.png" alt="NAIOP Central Ohio, Industrial Project of the Year 2024" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2025/04/Awards-VTRE-Website.png" alt="NAIOP Northeast Florida, Developer of the Year 2023" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2023/03/1-1.png" alt="NAIOP Southern Nevada, Industrial Building of the Year 2023" loading="lazy" decoding="async" width="500" height="500"></li>
-        <li data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2023/03/2-1.png" alt="Midwest Real Estate News, #2 Top Midwest Developer 2022" loading="lazy" decoding="async" width="500" height="500"></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a1-340.avif"><img src="img/a1-340.jpg" alt="NAIOP Northeast Florida, Developer of the Year 2025" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a2-340.avif"><img src="img/a2-340.jpg" alt="Columbus Business First, Developer of the Year 2025" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a3-340.avif"><img src="img/a3-340.jpg" alt="Columbus Business First, Industrial Project of the Year 2025" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a4-340.avif"><img src="img/a4-340.jpg" alt="NAIOP Southern Nevada Spotlight Awards, Industrial Park 2025" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a5-340.avif"><img src="img/a5-340.jpg" alt="NAIOP Central Ohio, Industrial Project of the Year 2024" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a6-340.avif"><img src="img/a6-340.jpg" alt="NAIOP Northeast Florida, Developer of the Year 2023" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a7-340.avif"><img src="img/a7-340.jpg" alt="NAIOP Southern Nevada, Industrial Building of the Year 2023" loading="lazy" decoding="async" width="500" height="500"></picture></li>
+        <li data-rise><picture><source type="image/avif" srcset="img/a8-340.avif"><img src="img/a8-340.jpg" alt="Midwest Real Estate News, #2 Top Midwest Developer 2022" loading="lazy" decoding="async" width="500" height="500"></picture></li>
     </ul>
   </section>
 
@@ -484,23 +485,23 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
     </div>
     <div class="wrap props__grid">
       <a class="prop prop--wide" href="https://vantrustrealestate.com/properties/" data-rise>
-        <div class="prop__img"><span class="chip">Industrial</span><img src="https://vantrustrealestate.com/wp-content/uploads/2022/11/1716325415079.jpg" alt="Aerial view of Vantage North industrial buildings" loading="lazy" decoding="async"></div>
+        <div class="prop__img"><span class="chip">Industrial</span><picture><source type="image/avif" srcset="img/p-vantage-640.avif 640w, img/p-vantage-1300.avif 1300w" sizes="(max-width:1024px) 92vw, 46vw"><img src="img/p-vantage-640.jpg" srcset="img/p-vantage-640.jpg 640w, img/p-vantage-1300.jpg 1300w" sizes="(max-width:1024px) 92vw, 46vw" alt="Aerial view of Vantage North industrial buildings" loading="lazy" decoding="async"></picture></div>
         <div class="prop__meta"><h3>Vantage North</h3><p class="prop__loc">Las Vegas, NV</p></div>
       </a>
       <a class="prop" href="https://vantrustrealestate.com/properties/" data-rise>
-        <div class="prop__img"><span class="chip">Industrial</span><img src="https://vantrustrealestate.com/wp-content/uploads/2023/02/New-Albany-315-Completed.jpg" alt="New Albany 315 building exterior" loading="lazy" decoding="async"></div>
+        <div class="prop__img"><span class="chip">Industrial</span><picture><source type="image/avif" srcset="img/p-albany-640.avif 640w, img/p-albany-1000.avif 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw"><img src="img/p-albany-640.jpg" srcset="img/p-albany-640.jpg 640w, img/p-albany-1000.jpg 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw" alt="New Albany 315 building exterior" loading="lazy" decoding="async"></picture></div>
         <div class="prop__meta"><h3>New Albany 315</h3><p class="prop__loc">New Albany, OH</p></div>
       </a>
       <a class="prop" href="https://vantrustrealestate.com/properties/" data-rise>
-        <div class="prop__img"><span class="chip">Industrial</span><img src="https://vantrustrealestate.com/wp-content/uploads/2023/02/Peoria-Logistics-Park.jpg" alt="Peoria Logistics Park building entrance" loading="lazy" decoding="async"></div>
+        <div class="prop__img"><span class="chip">Industrial</span><picture><source type="image/avif" srcset="img/p-peoria-640.avif 640w, img/p-peoria-1000.avif 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw"><img src="img/p-peoria-640.jpg" srcset="img/p-peoria-640.jpg 640w, img/p-peoria-1000.jpg 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw" alt="Peoria Logistics Park building entrance" loading="lazy" decoding="async"></picture></div>
         <div class="prop__meta"><h3>Peoria Logistics Park</h3><p class="prop__loc">Peoria, AZ</p></div>
       </a>
       <a class="prop" href="https://vantrustrealestate.com/properties/" data-rise>
-        <div class="prop__img"><span class="chip">Industrial</span><img src="https://vantrustrealestate.com/wp-content/uploads/2023/01/DalParc-5-October-2024-36-SW-Corner-N-scaled.jpg" alt="DalParc I-20 Logistics Building 5" loading="lazy" decoding="async"></div>
+        <div class="prop__img"><span class="chip">Industrial</span><picture><source type="image/avif" srcset="img/p-dalparc-640.avif 640w, img/p-dalparc-1000.avif 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw"><img src="img/p-dalparc-640.jpg" srcset="img/p-dalparc-640.jpg 640w, img/p-dalparc-1000.jpg 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw" alt="DalParc I-20 Logistics Building 5" loading="lazy" decoding="async"></picture></div>
         <div class="prop__meta"><h3>DalParc I-20 Logistics, Bldg 5</h3><p class="prop__loc">Dallas, TX</p></div>
       </a>
       <a class="prop" href="https://vantrustrealestate.com/properties/" data-rise>
-        <div class="prop__img"><span class="chip">Industrial</span><img src="https://vantrustrealestate.com/wp-content/uploads/2023/01/Fort-Worth-Logistics-Hub-Building-2-Conceptual-Rendering.jpg" alt="Fort Worth Logistics Hub Building 2 rendering" loading="lazy" decoding="async"></div>
+        <div class="prop__img"><span class="chip">Industrial</span><picture><source type="image/avif" srcset="img/p-fortworth-640.avif 640w, img/p-fortworth-1000.avif 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw"><img src="img/p-fortworth-640.jpg" srcset="img/p-fortworth-640.jpg 640w, img/p-fortworth-1000.jpg 1000w" sizes="(max-width:520px) 92vw, (max-width:1024px) 46vw, 22vw" alt="Fort Worth Logistics Hub Building 2 rendering" loading="lazy" decoding="async"></picture></div>
         <div class="prop__meta"><h3>Fort Worth Logistics Hub, Bldg 2</h3><p class="prop__loc">Fort Worth, TX</p></div>
       </a>
     </div>
@@ -526,7 +527,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   <!-- QUOTE -->
   <section class="quote">
     <div class="wrap quote__grid">
-      <figure class="quote__photo" data-rise><img src="https://vantrustrealestate.com/wp-content/uploads/2020/11/Dave-Harrison_2026_web.png" alt="Dave Harrison, President and CEO of VanTrust" loading="lazy" decoding="async" width="647" height="647"></figure>
+      <figure class="quote__photo" data-rise><picture><source type="image/avif" srcset="img/ceo-480.avif 480w, img/ceo-647.avif 647w" sizes="(max-width:820px) 260px, 24vw"><img src="img/ceo-480.jpg" srcset="img/ceo-480.jpg 480w, img/ceo-647.jpg 647w" sizes="(max-width:820px) 260px, 24vw" alt="Dave Harrison, President and CEO of VanTrust" loading="lazy" decoding="async" width="647" height="647"></picture></figure>
       <blockquote>
         <p data-words>“We show up to measure ourselves based on our collective success and to be responsible stewards to the real estate and our communities.”</p>
         <footer data-rise><b>Dave Harrison</b> President &amp; CEO</footer>
@@ -541,9 +542,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
       <a class="link link--end" href="https://vantrustrealestate.com/" data-rise>All articles</a>
     </div>
     <ul class="wrap news__list">
-      <li data-rise><a href="https://vantrustrealestate.com/vantrust-plans-next-wave-of-industrial-development-across-northeast-florida/"><div class="news__img"><img src="https://vantrustrealestate.com/wp-content/uploads/2026/11/screen-shot-2022-04-20-at-113448-am-768x422.webp" alt="Aerial view of industrial land in Northeast Florida" loading="lazy" decoding="async"></div><time datetime="2026-11-05">Nov 5, 2026</time><h3>VanTrust plans next wave of industrial development across Northeast Florida</h3><span class="news__more">Read article <svg viewBox="0 0 20 12" aria-hidden="true"><path d="M0 6h18M13 1l5 5-5 5"/></svg></span></a></li>
-      <li data-rise><a href="https://vantrustrealestate.com/meet-kcbjs-2026-best-places-to-work-vantrust-real-estate/"><div class="news__img"><img src="https://vantrustrealestate.com/wp-content/uploads/2022/11/People-People-People.jpg" alt="The VanTrust team" loading="lazy" decoding="async"></div><time datetime="2026-10-26">Oct 26, 2026</time><h3>Meet KCBJ’s 2026 Best Places to Work: VanTrust Real Estate</h3><span class="news__more">Read article <svg viewBox="0 0 20 12" aria-hidden="true"><path d="M0 6h18M13 1l5 5-5 5"/></svg></span></a></li>
-      <li data-rise><a href="https://vantrustrealestate.com/vantrust-to-start-construction-on-phase-ii-at-vt101-in-glendale/"><div class="news__img"><img src="https://vantrustrealestate.com/wp-content/uploads/2026/10/VTRE-Photo-Oct-14-2026-12-11PM-768x512.jpg" alt="VT101 site in Glendale" loading="lazy" decoding="async"></div><time datetime="2026-10-14">Oct 14, 2026</time><h3>VanTrust to start construction on Phase II at VT101 in Glendale</h3><span class="news__more">Read article <svg viewBox="0 0 20 12" aria-hidden="true"><path d="M0 6h18M13 1l5 5-5 5"/></svg></span></a></li>
+      <li data-rise><a href="https://vantrustrealestate.com/vantrust-plans-next-wave-of-industrial-development-across-northeast-florida/"><div class="news__img"><picture><source type="image/avif" srcset="img/n-florida-640.avif 640w, img/n-florida-768.avif 768w" sizes="(max-width:820px) 92vw, (max-width:1024px) 46vw, 30vw"><img src="img/n-florida-640.jpg" srcset="img/n-florida-640.jpg 640w, img/n-florida-768.jpg 768w" sizes="(max-width:820px) 92vw, (max-width:1024px) 46vw, 30vw" alt="Aerial view of industrial land in Northeast Florida" loading="lazy" decoding="async"></picture></div><time datetime="2026-11-05">Nov 5, 2026</time><h3>VanTrust plans next wave of industrial development across Northeast Florida</h3><span class="news__more">Read article <svg viewBox="0 0 20 12" aria-hidden="true"><path d="M0 6h18M13 1l5 5-5 5"/></svg></span></a></li>
+      <li data-rise><a href="https://vantrustrealestate.com/meet-kcbjs-2026-best-places-to-work-vantrust-real-estate/"><div class="news__img"><picture><source type="image/avif" srcset="img/n-team-640.avif 640w, img/n-team-1000.avif 1000w" sizes="(max-width:820px) 92vw, (max-width:1024px) 46vw, 30vw"><img src="img/n-team-640.jpg" srcset="img/n-team-640.jpg 640w, img/n-team-1000.jpg 1000w" sizes="(max-width:820px) 92vw, (max-width:1024px) 46vw, 30vw" alt="The VanTrust team" loading="lazy" decoding="async"></picture></div><time datetime="2026-10-26">Oct 26, 2026</time><h3>Meet KCBJ’s 2026 Best Places to Work: VanTrust Real Estate</h3><span class="news__more">Read article <svg viewBox="0 0 20 12" aria-hidden="true"><path d="M0 6h18M13 1l5 5-5 5"/></svg></span></a></li>
+      <li data-rise><a href="https://vantrustrealestate.com/vantrust-to-start-construction-on-phase-ii-at-vt101-in-glendale/"><div class="news__img"><picture><source type="image/avif" srcset="img/n-vt101-640.avif 640w, img/n-vt101-768.avif 768w" sizes="(max-width:820px) 92vw, (max-width:1024px) 46vw, 30vw"><img src="img/n-vt101-640.jpg" srcset="img/n-vt101-640.jpg 640w, img/n-vt101-768.jpg 768w" sizes="(max-width:820px) 92vw, (max-width:1024px) 46vw, 30vw" alt="VT101 site in Glendale" loading="lazy" decoding="async"></picture></div><time datetime="2026-10-14">Oct 14, 2026</time><h3>VanTrust to start construction on Phase II at VT101 in Glendale</h3><span class="news__more">Read article <svg viewBox="0 0 20 12" aria-hidden="true"><path d="M0 6h18M13 1l5 5-5 5"/></svg></span></a></li>
     </ul>
   </section>
 
@@ -563,7 +564,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 
 <footer class="foot">
   <div class="wrap foot__grid">
-    <a class="nav__logo foot__logo" href="#top" aria-label="VanTrust home"><img src="img/vantrust-logo-white.png" alt="VanTrust" width="340" height="74"></a>
+    <a class="nav__logo foot__logo" href="#top" aria-label="VanTrust home"><picture><source type="image/avif" srcset="img/vantrust-logo-white.avif"><img src="img/vantrust-logo-white.png" alt="VanTrust" width="340" height="74" loading="lazy" decoding="async"></picture></a>
     <ul class="foot__links">
       <li><a href="#properties">Properties</a></li>
       <li><a href="#services">Services</a></li>
@@ -580,6 +581,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   <div class="wrap foot__base"><span>© 2026 VanTrust Real Estate</span><span>Kansas City · Phoenix · Dallas · Columbus · Jacksonville · Salt Lake City</span></div>
 </footer>
 
-<script src="app.js?v=3" defer></script>
+<script src="app.js?v=5" defer></script>
 </body>
 </html>
